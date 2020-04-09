@@ -2,7 +2,7 @@
 
 This repository contains the source of the paper "Reflected Weibull distribution: simulation with censored data"
 
-(RelDist)[https://github.com/ousuga/RelDists] package used in the simulation can be installed with:
+[RelDist](https://github.com/ousuga/RelDists) package used in the simulation can be installed with:
 
 ```{r}
 if (!require('devtools')) install.packages('devtools')
