@@ -1,0 +1,46 @@
+require(RelDists)
+require(gamlss)
+
+setwd("your directory")
+
+# The parameters ----------------------------------------------------------
+true_mu    <- 1
+true_sigma <- 1
+
+# Useful functions to the simulation study --------------------------------
+
+# Funcion para obtener mu_hat, sigma_hat y nu_hat para un valor fijo de n
+simul_one <- function(size) {
+  y <- rRW(n=size, mu=true_mu, sigma=true_sigma)
+  
+  mod <- NULL
+  mod <- gamlss(y~1, sigma.fo=~1, family='RW',
+                control=gamlss.control(n.cyc=10000, trace=FALSE), method=CG())
+  res <- c(exp(coef(mod, what='mu')), 
+           exp(coef(mod, what='sigma')))
+  
+  res
+}
+
+# Super function to simulate and write the estimated parameters
+simul <- function(n) {
+  result <- t(replicate(n=nrep, expr=simul_one(size=n)))
+  result <- cbind(result, n)
+  write(x=t(result), file='SincensuraSincovCG_100000.txt', 
+        ncol=3, append=TRUE)
+}
+
+
+# Code to generate the simulations given n --------------------------------
+
+# Aqui se definen los valores de tamano muestral n
+# Luego se define el numero de repeticiones
+n <- seq(from=570, to=1000, by=20)
+nrep <- 100000
+
+values <- expand.grid(n=n)
+values
+apply(values, 1, simul)
+
+
+
